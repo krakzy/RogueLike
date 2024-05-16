@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DungeonGenerator : MonoBehaviour
 {
+    public int maxEnemies;
     private int width, height;
     private int maxRoomSize, minRoomSize;
     private int maxRooms;
@@ -24,6 +25,11 @@ public class DungeonGenerator : MonoBehaviour
     public void SetMaxRooms(int max)
     {
         maxRooms = max;
+    }
+    
+    public void SetMaxEnemies(int max)
+    {
+        maxEnemies = max;
     }
 
     public void Generate()
@@ -75,10 +81,15 @@ public class DungeonGenerator : MonoBehaviour
                 TunnelBetween(rooms[rooms.Count - 1], room);
             }
 
+            // Place enemies in the room before adding it to the list of rooms
+            PlaceEnemies(room, maxEnemies);
+
             rooms.Add(room);
         }
+
         var player = MapManager.Get.CreateActor("Player", rooms[0].Center());
     }
+
 
     private bool TrySetWallTile(Vector3Int pos)
     {
@@ -144,5 +155,44 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
         }
+    }
+    private void PlaceEnemies(Room room, int maxEnemies)
+
+    {
+
+        // the number of enemies we want 
+
+        int num = Random.Range(0, maxEnemies + 1);
+
+
+
+        for (int counter = 0; counter < num; counter++)
+
+        {
+
+            // The borders of the room are walls, so add and substract by 1 
+
+            int x = Random.Range(room.X + 1, room.X + room.Width - 1);
+
+            int y = Random.Range(room.Y + 1, room.Y + room.Height - 1);
+
+
+
+            // create different enemies 
+
+            if (Random.value < 0.5f)
+
+            {
+                GameManager.Get.CreateActor("King", new Vector2(x, y));
+            }
+
+            else
+
+            {
+                GameManager.Get.CreateActor("Pipo", new Vector2(x, y));
+            }
+
+        }
+
     }
 }
