@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     // Lijst van vijanden (Enemies)
     private List<Actor> enemies = new List<Actor>();
 
+    // Speler (Player)
+    public Actor Player { get; set; }
+
     private void Awake()
     {
         if (instance == null)
@@ -20,13 +23,19 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public void StartEnemyTurn()
+    {
+        foreach (Actor enemy in enemies)
+        {
+            Enemy enemyComponent = enemy.GetComponent<Enemy>();
+            if (enemyComponent != null)
+            {
+                enemyComponent.RunAI(); // Roep de RunAI-functie van het Enemy-component aan
+            }
+        }
+    }
 
     public static GameManager Get { get => instance; }
-
-    public Actor GetActorAtLocation(Vector3 location)
-    {
-        return null;
-    }
 
     // Methode om een vijand toe te voegen aan de lijst
     public void AddEnemy(Actor enemy)
@@ -39,6 +48,8 @@ public class GameManager : MonoBehaviour
     {
         enemies.Remove(enemy);
     }
+
+    // Methode om een acteur te maken
     public GameObject CreateActor(string name, Vector3 position)
     {
         GameObject actor = Instantiate(Resources.Load<GameObject>($"Prefabs/{name}"), position, Quaternion.identity);
@@ -46,11 +57,32 @@ public class GameManager : MonoBehaviour
         return actor;
     }
 
-
     // Methode om de lijst van vijanden op te halen
     public List<Actor> GetEnemies()
     {
         return enemies;
     }
 
+    // Methode om de acteur op een bepaalde locatie op te halen
+    public Actor GetActorAtLocation(Vector3 location)
+    {
+        // Check of de locatie overeenkomt met de positie van de speler
+        if (Player != null && Player.transform.position == location)
+        {
+            return Player;
+        }
+
+        // Check of de locatie overeenkomt met de positie van een vijand
+        foreach (Actor enemy in enemies)
+        {
+            if (enemy.transform.position == location)
+            {
+                return enemy;
+            }
+        }
+
+        // Geen acteur gevonden op de gegeven locatie
+        return null;
+    }
 }
+
