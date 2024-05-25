@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5044814672826224519}
   - component: {fileID: 542538865164585920}
   - component: {fileID: 9109019909134275941}
+  - component: {fileID: 8745590070428650865}
   m_Layer: 0
   m_Name: Pipo
   m_TagString: Untagged
@@ -100,6 +101,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FieldOfView: []
   FieldOfViewRange: 8
+  maxHitPoints: 8
+  hitPoints: 8
+  defense: 0
+  power: 3
 --- !u!114 &9109019909134275941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,5 +115,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ec21c8e6b5efab458de3f929ef9a816, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8745590070428650865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8974438311288038452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af028bd8c61434a4f8119d19adbf4b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

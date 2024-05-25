@@ -8,10 +8,64 @@ public class Actor : MonoBehaviour
     public List<Vector3Int> FieldOfView = new List<Vector3Int>();
     public int FieldOfViewRange = 8;
 
+    [Header("Powers")]
+    [SerializeField] private int maxHitPoints = 30;
+    [SerializeField] private int hitPoints = 30;
+    [SerializeField] private int defense;
+    [SerializeField] private int power;
+
+    public int MaxHitPoints => maxHitPoints;
+    public int HitPoints => hitPoints;
+    public int Defense => defense;
+    public int Power => power;
+
     private void Start()
     {
         algorithm = new AdamMilVisibility();
         UpdateFieldOfView();
+
+        if (GetComponent<Player>())
+        {
+            UIManager.Instance.UpdateHealth(hitPoints, maxHitPoints);
+        }
+    }
+
+    private void Die()
+    {
+        
+        if (GetComponent<Player>())
+        {
+            UIManager.Instance.AddMessage("You died!", Color.red);
+        }
+        else
+        {
+            UIManager.Instance.AddMessage($"{name} is dead!", Color.green);
+            GameManager.Get.RemoveEnemy(this);
+        }
+
+        GameObject gravestone = GameManager.Get.CreateActor("Dead", transform.position);
+        gravestone.name = $"Remains of {name}";
+
+        Destroy(gameObject);
+    }
+
+    public void DoDamage(int hp)
+    {
+        hitPoints -= hp;
+        if (hitPoints < 0)
+        {
+            hitPoints = 0;
+        }
+
+        if (GetComponent<Player>())
+        {
+            UIManager.Instance.UpdateHealth(hitPoints, maxHitPoints);
+        }
+
+        if (hitPoints == 0)
+        {
+            Die();
+        }
     }
 
     public void Move(Vector3 direction)

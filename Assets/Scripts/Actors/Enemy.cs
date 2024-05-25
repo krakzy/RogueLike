@@ -72,8 +72,16 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        // First check if already fighting, because the FieldOfView check costs more CPU
-        if (IsFighting || GetComponent<Actor>().FieldOfView.Contains(gridPosition))
+        // Calculate distance between enemy and target
+        float distance = Vector3.Distance(transform.position, Target.transform.position);
+
+        // Check if target is within attacking range
+        if (distance < 1.5f)
+        {
+            // Attack the target
+            Action.Hit(GetComponent<Actor>(), Target);
+        }
+        else
         {
             // If the enemy was not fighting, it should be fighting now
             IsFighting = true;

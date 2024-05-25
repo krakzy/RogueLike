@@ -43,10 +43,18 @@ public class GameManager : MonoBehaviour
         enemies.Add(enemy);
     }
 
-    // Methode om een vijand te verwijderen uit de lijst
     public void RemoveEnemy(Actor enemy)
     {
-        enemies.Remove(enemy);
+        if (enemies.Contains(enemy))
+        {
+            enemies.Remove(enemy);
+            Destroy(enemy.gameObject);
+            Debug.Log($"{enemy.name} has been removed.");
+        }
+        else
+        {
+            Debug.Log("Enemy not found in the list.");
+        }
     }
 
     // Methode om een acteur te maken
@@ -84,5 +92,6 @@ public class GameManager : MonoBehaviour
         // Geen acteur gevonden op de gegeven locatie
         return null;
     }
+
 }
 
