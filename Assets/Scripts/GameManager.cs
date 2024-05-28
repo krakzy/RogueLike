@@ -1,3 +1,4 @@
+using Items;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class GameManager : MonoBehaviour
     // Speler (Player)
     public Actor Player { get; set; }
 
+    // Lijst van items (Consumables)
+    private List<Consumable> items = new List<Consumable>();
+
     private void Awake()
     {
         if (instance == null)
@@ -23,6 +27,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     public void StartEnemyTurn()
     {
         foreach (Actor enemy in enemies)
@@ -60,8 +65,30 @@ public class GameManager : MonoBehaviour
     // Methode om een acteur te maken
     public GameObject CreateActor(string name, Vector3 position)
     {
-        GameObject actor = Instantiate(Resources.Load<GameObject>($"Prefabs/{name}"), position, Quaternion.identity);
+        GameObject actorPrefab = Resources.Load<GameObject>($"Prefabs/{name}");
+        if (actorPrefab == null)
+        {
+            Debug.LogError($"Prefab with name {name} not found in Prefabs folder.");
+            return null;
+        }
+
+        GameObject actor = Instantiate(actorPrefab, position, Quaternion.identity);
         actor.name = name;
+
+        // Check if the actor is the Player and assign it to the Player property
+        if (name == "Player")
+        {
+            Player = actor.GetComponent<Actor>();
+            if (Player == null)
+            {
+                Debug.LogError("The Player prefab does not have an Actor component.");
+            }
+            else
+            {
+                Debug.Log("Player has been initialized.");
+            }
+        }
+
         return actor;
     }
 
@@ -93,5 +120,40 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-}
+    // Methode om een item toe te voegen aan de lijst
+    public void AddItem(Consumable item)
+    {
+        items.Add(item);
+        Debug.Log($"{item.name} has been added.");
+    }
 
+    // Methode om een item uit de lijst te verwijderen
+    public void RemoveItem(Consumable item)
+    {
+        if (items.Contains(item))
+        {
+            items.Remove(item);
+            Destroy(item.gameObject);
+            Debug.Log($"{item.name} has been removed.");
+        }
+        else
+        {
+            Debug.Log("Item not found in the list.");
+        }
+    }
+
+    // Methode om een item op een bepaalde locatie op te halen
+    public Consumable GetItemAtLocation(Vector3 location)
+    {
+        foreach (Consumable item in items)
+        {
+            if (item.transform.position == location)
+            {
+                return item;
+            }
+        }
+
+        // Geen item gevonden op de gegeven locatie
+        return null;
+    }
+}
