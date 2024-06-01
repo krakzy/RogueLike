@@ -156,4 +156,18 @@ public class GameManager : MonoBehaviour
         // Geen item gevonden op de gegeven locatie
         return null;
     }
+
+    // Nieuwe methode om vijanden binnen een straal van 5 eenheden te krijgen
+    public List<Actor> GetNearbyEnemies(Vector3 location)
+    {
+        List<Actor> nearbyEnemies = new List<Actor>();
+        foreach (Actor enemy in enemies)
+        {
+            if (Vector3.Distance(enemy.transform.position, location) < 5f)
+            {
+                nearbyEnemies.Add(enemy);
+            }
+        }
+        return nearbyEnemies;
+    }
 }

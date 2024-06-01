@@ -32,7 +32,6 @@ public class Actor : MonoBehaviour
 
     private void Die()
     {
-        
         if (GetComponent<Player>())
         {
             UIManager.Instance.AddMessage("You died!", Color.red);
@@ -86,6 +85,24 @@ public class Actor : MonoBehaviour
         if (GetComponent<Player>())
         {
             MapManager.Get.UpdateFogMap(FieldOfView);
+        }
+    }
+
+    public void Heal(int hp)
+    {
+        int oldHitPoints = hitPoints;
+        hitPoints += hp;
+        if (hitPoints > maxHitPoints)
+        {
+            hitPoints = maxHitPoints;
+        }
+
+        int actualHealing = hitPoints - oldHitPoints;
+
+        if (GetComponent<Player>())
+        {
+            UIManager.Instance.UpdateHealth(hitPoints, maxHitPoints);
+            UIManager.Instance.AddMessage($"You healed for {actualHealing} hit points!", Color.green);
         }
     }
 }

@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgb(0, 12, 75); align-items: center;">
+        <ui:Label tabindex="-1" text="Inventory" parse-escape-sequences="true" display-tooltip-when-elided="true" style="color: rgb(255, 255, 255); -unity-font-style: bold-and-italic; font-size: 20px;" />
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Item1" style="-unity-font-style: bold; color: rgb(255, 255, 255);" />
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Item2" style="color: rgb(255, 255, 255); -unity-font-style: bold;" />
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Item3" style="color: rgb(255, 255, 255); -unity-font-style: bold;" />
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Item4" style="-unity-font-style: bold; color: rgb(255, 255, 255);" />
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Item5" style="-unity-font-style: bold; color: rgb(255, 255, 255);" />
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Item6" style="color: rgb(255, 255, 255); -unity-font-style: bold;" />
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Item7" style="color: rgb(255, 255, 255); -unity-font-style: bold;" />
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Item8" style="color: rgb(255, 255, 255); -unity-font-style: bold;" />
+    </ui:VisualElement>
+</ui:UXML>

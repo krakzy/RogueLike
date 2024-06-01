@@ -10,6 +10,13 @@ public class Enemy : MonoBehaviour
     public bool IsFighting { get; set; } = false;
     public AStar Algorithm { get; private set; }
 
+    private int confused = 0;
+
+    public void Confuse()
+    {
+        confused = 8;
+    }
+
     private void Start()
     {
         GameManager.Get.AddEnemy(GetComponent<Actor>());
@@ -51,6 +58,14 @@ public class Enemy : MonoBehaviour
 
     public void RunAI()
     {
+        // Check if the enemy is confused
+        if (confused > 0)
+        {
+            confused--;
+            UIManager.Instance.AddMessage($"The {name} is confused and cannot act.", Color.yellow);
+            return;
+        }
+
         // Ensure GameManager is initialized and has a player
         if (GameManager.Get == null || GameManager.Get.Player == null)
         {
@@ -91,5 +106,3 @@ public class Enemy : MonoBehaviour
         }
     }
 }
-
-

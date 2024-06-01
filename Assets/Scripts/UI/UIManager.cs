@@ -8,9 +8,11 @@ public class UIManager : MonoBehaviour
     [Header("Documents")]
     public GameObject HealthBar; // Ensure this is assigned in the inspector
     public GameObject Messages;
+    public GameObject Inventory; // New GameObject for Inventory
 
     private Healthbar healthBar;
     private Messages messagesController;
+    private InventoryUI inventoryUI; // Variable to hold the InventoryUI component
 
     private void Awake()
     {
@@ -47,6 +49,19 @@ public class UIManager : MonoBehaviour
             messagesController = Messages.GetComponent<Messages>();
         }
 
+        if (Inventory != null)
+        {
+            inventoryUI = Inventory.GetComponent<InventoryUI>();
+            if (inventoryUI == null)
+            {
+                Debug.LogError("InventoryUI component is not found on the assigned Inventory GameObject!");
+            }
+        }
+        else
+        {
+            Debug.LogError("Inventory is not assigned in the UIManager!");
+        }
+
         // Initial clear and welcome message
         if (messagesController != null)
         {
@@ -73,5 +88,11 @@ public class UIManager : MonoBehaviour
         {
             messagesController.AddMessage(message, color);
         }
+    }
+
+    // Public getter for the InventoryUI component
+    public InventoryUI GetInventoryUI()
+    {
+        return inventoryUI;
     }
 }
