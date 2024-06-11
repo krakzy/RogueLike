@@ -5,7 +5,12 @@ using UnityEngine;
 public class DungeonGenerator : MonoBehaviour
 {
     public int maxEnemies;
-    public int maxItems; // Add maxItems variable
+    public int maxItems;
+    public int currentFloor; // New variable to track the current floor
+    public GameObject LadderUp;
+    public GameObject LadderDown;
+
+
     private int width, height;
     private int maxRoomSize, minRoomSize;
     private int maxRooms;
@@ -33,9 +38,14 @@ public class DungeonGenerator : MonoBehaviour
         maxEnemies = max;
     }
 
-    public void SetMaxItems(int max) // Add SetMaxItems method
+    public void SetMaxItems(int max)
     {
         maxItems = max;
+    }
+
+    public void SetCurrentFloor(int floor) // New method to set the current floor
+    {
+        currentFloor = floor;
     }
 
     public void Generate()
@@ -96,6 +106,27 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         var player = MapManager.Get.CreateActor("Player", rooms[0].Center());
+
+        // Place the ladders
+        PlaceLadders();
+    }
+
+
+    private void PlaceLadders()
+    {
+        // Place the ladder to go up
+        var firstRoom = rooms[0];
+        var ladderUpPosition = new Vector3(firstRoom.Center().x, firstRoom.Center().y, 0);
+        var ladderUpGameObject = Instantiate(LadderUp, ladderUpPosition, Quaternion.identity);
+        var ladderUpComponent = ladderUpGameObject.GetComponent<Ladder>();
+        ladderUpComponent.Up = true;
+
+        // Place the ladder to go down in the last room
+        var lastRoom = rooms[rooms.Count - 1];
+        var ladderDownPosition = new Vector3(lastRoom.Center().x, lastRoom.Center().y, 0);
+        var ladderDownGameObject = Instantiate(LadderDown, ladderDownPosition, Quaternion.identity);
+        var ladderDownComponent = ladderDownGameObject.GetComponent<Ladder>();
+        ladderDownComponent.Up = false;
     }
 
     private bool TrySetWallTile(Vector3Int pos)
@@ -205,8 +236,9 @@ public class DungeonGenerator : MonoBehaviour
             }
             else
             {
-                GameManager.Get.CreateActor("ScrollOfConfusion", new Vector2(x, y)); // Ensure the prefab exists
+               GameManager.Get.CreateActor("ScrollOfConfusion", new Vector2(x, y)); // Ensure the prefab exists
             }
         }
     }
 }
+

@@ -16,6 +16,35 @@ public class GameManager : MonoBehaviour
     // Lijst van items (Consumables)
     private List<Consumable> items = new List<Consumable>();
 
+    // Lijst van ladders
+    private List<Ladder> ladders = new List<Ladder>();
+
+    private int currentFloor = 0; // Voeg currentFloor toe
+
+    public int CurrentFloor // Voeg een eigenschap toe om currentFloor in te stellen en op te halen
+    {
+        get { return currentFloor; }
+        set { currentFloor = value; }
+    }
+
+    public void MoveUp()
+    {
+        // Increment the current floor level
+        MapManager.Get.floor++;
+
+        // Generate the dungeon for the new floor
+        MapManager.Get.GenerateDungeon();
+    }
+
+    public void MoveDown()
+    {
+        // Decrement the current floor level, ensuring it doesn't go below 0
+        MapManager.Get.floor = Mathf.Max(0, MapManager.Get.floor - 1);
+
+        // Generate the dungeon for the new floor
+        MapManager.Get.GenerateDungeon();
+    }
+
     private void Awake()
     {
         if (instance == null)
@@ -169,5 +198,32 @@ public class GameManager : MonoBehaviour
             }
         }
         return nearbyEnemies;
+    }
+
+    // Methode om een ladder toe te voegen aan de lijst
+    public void AddLadder(Ladder ladder)
+    {
+        ladders.Add(ladder);
+    }
+
+    // Methode om de lijst van ladders op te halen
+    public List<Ladder> GetLadders()
+    {
+        return ladders;
+    }
+
+    // Methode om de ladder op een bepaalde locatie op te halen
+    public Ladder GetLadderAtLocation(Vector3 location)
+    {
+        foreach (Ladder ladder in ladders)
+        {
+            if (ladder.transform.position == location)
+            {
+                return ladder;
+            }
+        }
+
+        // Geen ladder gevonden op de gegeven locatie
+        return null;
     }
 }

@@ -82,6 +82,30 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void UpdateLevel(int level)
+    {
+        if (healthBar != null)
+        {
+            healthBar.SetLevel(level);
+        }
+        else
+        {
+            Debug.LogError("HealthBar component is not assigned!");
+        }
+    }
+
+    public void UpdateXP(int xp)
+    {
+        if (healthBar != null)
+        {
+            healthBar.SetXP(xp);
+        }
+        else
+        {
+            Debug.LogError("HealthBar component is not assigned!");
+        }
+    }
+
     public void AddMessage(string message, Color color)
     {
         if (messagesController != null)

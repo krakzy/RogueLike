@@ -7,6 +7,10 @@ public class MapManager : MonoBehaviour
 {
     private static MapManager instance;
 
+    public Actor Player { get; set; }
+
+    public int floor = 0; // Add a variable to track the current floor
+
     private void Awake()
     {
         if (instance == null)
@@ -42,31 +46,49 @@ public class MapManager : MonoBehaviour
     public int roomMaxSize = 10;
     public int roomMinSize = 6;
     public int maxRooms = 30;
-    public int maxEnemies = 2; // Voeg maxEnemies toe
-    public int maxItems = 2; // Voeg maxItems toe
+    public int maxEnemies = 2;
+    public int maxItems = 2;
 
     private void Start()
     {
         GenerateDungeon();
     }
 
-    private void GenerateDungeon()
+    public void GenerateDungeon()
     {
+        // Clear all tiles from the maps
+        FloorMap.ClearAllTiles();
+        ObstacleMap.ClearAllTiles();
+        FogMap.ClearAllTiles();
+
+        // Reset Tiles and VisibleTiles
         Tiles = new Dictionary<Vector3Int, TileData>();
         VisibleTiles = new List<Vector3Int>();
 
-        // Set maxEnemies and maxItems before generating the dungeon
+        // Generate dungeon for the current floor
         var generator = new DungeonGenerator();
         generator.SetSize(width, height);
         generator.SetRoomSize(roomMinSize, roomMaxSize);
         generator.SetMaxRooms(maxRooms);
-        generator.SetMaxEnemies(maxEnemies); // Instellen van maxEnemies
-        generator.SetMaxItems(maxItems); // Instellen van maxItems
+        generator.SetMaxEnemies(maxEnemies);
+        generator.SetMaxItems(maxItems);
         generator.Generate();
 
         AddTileMapToDictionary(FloorMap);
         AddTileMapToDictionary(ObstacleMap);
         SetupFogMap();
+    }
+
+    public void MoveUp()
+    {
+        floor++;
+        GenerateDungeon();
+    }
+
+    public void MoveDown()
+    {
+        floor--;
+        GenerateDungeon();
     }
 
     public GameObject CreateActor(string name, Vector2 position)

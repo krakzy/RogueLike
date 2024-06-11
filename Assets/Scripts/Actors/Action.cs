@@ -5,27 +5,15 @@ using UnityEngine;
 public class Action : MonoBehaviour
 {
     static public void MoveOrHit(Actor actor, Vector2 direction)
-
     {
-
         // see if someone is at the target position 
-
-        Actor target = GameManager.Get.GetActorAtLocation(actor.transform.position
-
-                       + (Vector3)direction);
-
-
+        Actor target = GameManager.Get.GetActorAtLocation(actor.transform.position + (Vector3)direction);
 
         // if not, we can move 
-
         if (target == null)
-
         {
-
             actor.Move(direction);
-
             actor.UpdateFieldOfView();
-
         }
         else
         {
@@ -33,11 +21,8 @@ public class Action : MonoBehaviour
             Hit(actor, target);
         }
 
-
         // end turn in case this is the player 
-
         EndTurn(actor);
-
     }
 
     static public void Move(Actor actor, Vector2 direction)
@@ -55,7 +40,7 @@ public class Action : MonoBehaviour
 
         if (damage > 0)
         {
-            target.DoDamage(damage);
+            target.DoDamage(damage, actor);
             UIManager.Instance.AddMessage($"{actor.name} hits {target.name} for {damage} damage.", actor.GetComponent<Player>() ? Color.white : Color.red);
         }
         else
@@ -63,6 +48,7 @@ public class Action : MonoBehaviour
             UIManager.Instance.AddMessage($"{actor.name} hits {target.name} but does no damage.", actor.GetComponent<Player>() ? Color.white : Color.red);
         }
     }
+
     static private void EndTurn(Actor actor)
     {
         // Controleer of de actor een player component heeft
@@ -74,4 +60,3 @@ public class Action : MonoBehaviour
         }
     }
 }
-

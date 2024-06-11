@@ -13,11 +13,17 @@ public class Actor : MonoBehaviour
     [SerializeField] private int hitPoints = 30;
     [SerializeField] private int defense;
     [SerializeField] private int power;
+    [SerializeField] private int level = 1;
+    [SerializeField] private int xp = 0;
+    [SerializeField] private int xpToNextLevel = 100;
 
     public int MaxHitPoints => maxHitPoints;
     public int HitPoints => hitPoints;
     public int Defense => defense;
     public int Power => power;
+    public int Level => level;
+    public int XP => xp;
+    public int XPToNextLevel => xpToNextLevel;
 
     private void Start()
     {
@@ -27,6 +33,8 @@ public class Actor : MonoBehaviour
         if (GetComponent<Player>())
         {
             UIManager.Instance.UpdateHealth(hitPoints, maxHitPoints);
+            UIManager.Instance.UpdateLevel(level);
+            UIManager.Instance.UpdateXP(xp);
         }
     }
 
@@ -48,7 +56,7 @@ public class Actor : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void DoDamage(int hp)
+    public void DoDamage(int hp, Actor attacker)
     {
         hitPoints -= hp;
         if (hitPoints < 0)
@@ -64,6 +72,10 @@ public class Actor : MonoBehaviour
         if (hitPoints == 0)
         {
             Die();
+            if (attacker != null && attacker.GetComponent<Player>())
+            {
+                attacker.AddXP(xp);
+            }
         }
     }
 
@@ -103,6 +115,38 @@ public class Actor : MonoBehaviour
         {
             UIManager.Instance.UpdateHealth(hitPoints, maxHitPoints);
             UIManager.Instance.AddMessage($"You healed for {actualHealing} hit points!", Color.green);
+        }
+    }
+
+    public void AddXP(int xp)
+    {
+        this.xp += xp;
+        if (this.xp >= xpToNextLevel)
+        {
+            LevelUp();
+        }
+
+        if (GetComponent<Player>())
+        {
+            UIManager.Instance.UpdateXP(this.xp);
+        }
+    }
+
+    private void LevelUp()
+    {
+        level++;
+        xp -= xpToNextLevel;
+        xpToNextLevel = Mathf.RoundToInt(xpToNextLevel * 1.5f); // Exponentially increase XP required for next level
+        maxHitPoints += 10;
+        defense += 2;
+        power += 2;
+        hitPoints = maxHitPoints; // Fully heal on level up
+
+        if (GetComponent<Player>())
+        {
+            UIManager.Instance.AddMessage("You leveled up!", Color.yellow);
+            UIManager.Instance.UpdateLevel(level);
+            UIManager.Instance.UpdateHealth(hitPoints, maxHitPoints);
         }
     }
 }

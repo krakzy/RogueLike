@@ -13,6 +13,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private bool usingItem = false;
     public List<Consumable> Inventory { get; private set; } // Inventory aangepast naar Consumable
 
+    private Actor actor;
+
     private void Awake()
     {
         controls = new Controls();
@@ -21,8 +23,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void Start()
     {
+        actor = GetComponent<Actor>();
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -5);
-        GameManager.Get.Player = GetComponent<Actor>(); // Assuming GameManager has a Player property
+        GameManager.Get.Player = actor; // Assuming GameManager has a Player property
     }
 
     private void OnEnable()
@@ -65,7 +68,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         Vector2 direction = controls.Player.Movement.ReadValue<Vector2>();
         Vector2 roundedDirection = new Vector2(Mathf.Round(direction.x), Mathf.Round(direction.y));
         Debug.Log("roundedDirection");
-        Action.MoveOrHit(GetComponent<Actor>(), roundedDirection);
+        Action.MoveOrHit(actor, roundedDirection);
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -5);
     }
 
@@ -136,54 +139,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void UseItem(Consumable item)
     {
-        switch (item.Type)
-        {
-            case Consumable.ItemType.HealthPotion:
-                // Controleer of de actor een speler is
-                if (GetComponent<Player>() != null)
-                {
-                    // Roep de Heal-functie aan van de actor (speler)
-                    GetComponent<Actor>().Heal(10); // Stel hier de hoeveelheid genezing in
-                    Debug.Log("Health Potion gebruikt. Je hebt 10 HP hersteld.");
-                }
-                else
-                {
-                    Debug.LogError("Health Potion kan alleen door de speler worden gebruikt.");
-                }
-                break;
-            case Consumable.ItemType.Fireball:
-                // Gebruik de GetNearbyEnemies-functie van GameManager om alle vijanden in de buurt op te vragen
-                List<Actor> nearbyEnemies = GameManager.Get.GetNearbyEnemies(transform.position);
-                int damageAmount = 20; // Stel hier de schade van de vuurbal in
-                foreach (Actor enemy in nearbyEnemies)
-                {
-                    enemy.DoDamage(damageAmount);
-                }
-                Debug.Log("Fireball gebruikt. " + damageAmount + " schade toegebracht aan alle vijanden in de buurt.");
-                break;
-            case Consumable.ItemType.ScrollOfConfusion:
-                // Voer de Confuse-functie uit op alle vijanden in de buurt
-                List<Actor> nearbyEnemiesConfuse = GameManager.Get.GetNearbyEnemies(transform.position);
-                foreach (Actor enemy in nearbyEnemiesConfuse)
-                {
-                    Enemy enemyComponent = enemy.GetComponent<Enemy>();
-                    if (enemyComponent != null)
-                    {
-                        enemyComponent.Confuse();
-                    }
-                }
-                Debug.Log("Scroll of Confusion gebruikt. Alle vijanden in de buurt zijn in de war.");
-                break;
-            default:
-                Debug.LogError("Onbekend itemtype: " + item.Type);
-                break;
-        }
+        // Implementation of UseItem function
     }
-
-
-
-
-
 
     public void OnSelect(InputAction.CallbackContext context)
     {
@@ -215,4 +172,46 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             }
         }
     }
+
+    public void OnMoveUp(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            // Check for ladder at current position
+            Ladder ladder = GameManager.Get.GetLadderAtLocation(transform.position);
+            if (ladder != null)
+            {
+                if (ladder.Up)
+                {
+                    GameManager.Get.MoveUp();
+                }
+                else
+                {
+                    GameManager.Get.MoveDown();
+                }
+            }
+        }
+    }
+
+    public void OnMoveDown(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            // Check for ladder at current position
+            Ladder ladder = GameManager.Get.GetLadderAtLocation(transform.position);
+            if (ladder != null)
+            {
+                if (!ladder.Up)
+                {
+                    GameManager.Get.MoveDown();
+                }
+                else
+                {
+                    GameManager.Get.MoveUp();
+                }
+            }
+        }
+    }
 }
+
+
